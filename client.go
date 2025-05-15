@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"time"
 )
 
 var client *Client
@@ -35,7 +34,7 @@ func NewClient(httpClient HTTPClient, baseURL string) *Client {
 
 	if httpClient == nil {
 		httpClient = &http.Client{
-			Timeout: time.Second * 5,
+			// Timeout: time.Second * 5,
 		}
 	}
 
