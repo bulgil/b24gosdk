@@ -11,15 +11,15 @@ type Deal struct {
 	Title               *string               `json:"TITLE,omitempty"`
 	CategoryID          *b24gosdk.B24int      `json:"CATEGORY_ID,omitempty"`
 	StageID             *string               `json:"STAGE_ID,omitempty"`
-	StageSemanticID     *byte                 `json:"STAGE_SEMANTIC_ID,omitempty"`
-	IsNew               *byte                 `json:"IS_NEW,omitempty"`
-	IsReccuring         *byte                 `json:"IS_RECURRING,omitempty"`
-	IsReturnCustomer    *byte                 `json:"IS_RETURN_CUSTOMER,omitempty"`
-	IsRepeatedApproach  *byte                 `json:"IS_REPEATED_APPROACH,omitempty"`
+	StageSemanticID     *string               `json:"STAGE_SEMANTIC_ID,omitempty"`
+	IsNew               *string               `json:"IS_NEW,omitempty"`
+	IsReccuring         *string               `json:"IS_RECURRING,omitempty"`
+	IsReturnCustomer    *string               `json:"IS_RETURN_CUSTOMER,omitempty"`
+	IsRepeatedApproach  *string               `json:"IS_REPEATED_APPROACH,omitempty"`
 	Probability         *b24gosdk.B24int      `json:"PROBABILITY,omitempty"`
 	CurrencyID          *string               `json:"CURRENCY_ID,omitempty"`
 	Opportunity         *b24gosdk.B24float    `json:"OPPORTUNITY,omitempty"`
-	IsManualOpportunity *byte                 `json:"IS_MANUAL_OPPORTUNITY,omitempty"`
+	IsManualOpportunity *string               `json:"IS_MANUAL_OPPORTUNITY,omitempty"`
 	TaxValue            *b24gosdk.B24float    `json:"TAX_VALUE,omitempty"`
 	CompanyID           *b24gosdk.B24int      `json:"COMPANY_ID,omitempty"`
 	ContactID           *b24gosdk.B24int      `json:"CONTACT_ID,omitempty"`
@@ -27,8 +27,8 @@ type Deal struct {
 	QuoteID             *b24gosdk.B24int      `json:"QUOTE_ID,omitempty"`
 	BeginDate           *b24gosdk.B24datetime `json:"BEGIN_DATE,omitempty"`
 	CloseDate           *b24gosdk.B24datetime `json:"CLOSEDATE,omitempty"`
-	Opened              *byte                 `json:"OPENED,omitempty"`
-	Closed              *byte                 `json:"CLOSED,omitempty"`
+	Opened              *string               `json:"OPENED,omitempty"`
+	Closed              *string               `json:"CLOSED,omitempty"`
 	Comments            *string               `json:"COMMENTS,omitempty"`
 	AsignedByID         *b24gosdk.B24int      `json:"ASSIGNED_BY_ID,omitempty"`
 	CreatedByID         *b24gosdk.B24int      `json:"CREATED_BY_ID,omitempty"`
