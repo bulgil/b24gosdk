@@ -22,7 +22,7 @@ type Client struct {
 	baseURL    *url.URL
 }
 
-func GetClient(httpClient HTTPClient, baseURL string) *Client {
+func NewClient(httpClient HTTPClient, baseURL string) *Client {
 	const op = "NewClient"
 
 	if client != nil {
@@ -44,12 +44,10 @@ func GetClient(httpClient HTTPClient, baseURL string) *Client {
 		panic(fmt.Sprintf("%s: %v", op, err))
 	}
 
-	client = &Client{
+	return &Client{
 		httpClient: httpClient,
 		baseURL:    u,
 	}
-
-	return client
 }
 
 func (c *Client) Call(method, webhook string, query url.Values, body, result any) error {

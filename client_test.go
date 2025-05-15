@@ -128,7 +128,7 @@ func Test_ClientCall(t *testing.T) {
 				// 	t.Fatalf("test server url parse error: %v", err)
 				// }
 
-				client := GetClient(ts.Client(), ts.URL)
+				client := NewClient(ts.Client(), ts.URL)
 
 				resultPtr := reflect.New(reflect.TypeOf(tt.expectedResp))
 				result := resultPtr.Interface()

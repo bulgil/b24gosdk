@@ -29,7 +29,7 @@ type CRMService[T any] struct {
 
 func NewCrmService[T any](webhook string, methods methods) *CRMService[T] {
 	return &CRMService[T]{
-		client:  b24gosdk.GetClient(nil, webhook),
+		client:  b24gosdk.NewClient(nil, webhook),
 		webhook: webhook,
 		methods: methods,
 	}
