@@ -93,7 +93,7 @@ type B24datetime time.Time
 
 func (d *B24datetime) UnmarshalJSON(data []byte) error {
 	const op = "B24datetime.UnmarshalJSON"
-	const datetimeLayout = "2006-01-02T15:04:05"
+	const datetimeLayout = time.RFC3339
 
 	var raw string
 	err := json.Unmarshal(data, &raw)
