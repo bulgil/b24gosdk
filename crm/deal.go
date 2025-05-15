@@ -20,7 +20,7 @@ type Deal struct {
 	CurrencyID          *string               `json:"CURRENCY_ID,omitempty"`
 	Opportunity         *b24gosdk.B24float    `json:"OPPORTUNITY,omitempty"`
 	IsManualOpportunity *byte                 `json:"IS_MANUAL_OPPORTUNITY,omitempty"`
-	TaxValue            *b24gosdk.B24int      `json:"TAX_VALUE,omitempty"`
+	TaxValue            *b24gosdk.B24float    `json:"TAX_VALUE,omitempty"`
 	CompanyID           *b24gosdk.B24int      `json:"COMPANY_ID,omitempty"`
 	ContactID           *b24gosdk.B24int      `json:"CONTACT_ID,omitempty"`
 	ContactIDs          *[]b24gosdk.B24int    `json:"CONTACT_IDS,omitempty"`
