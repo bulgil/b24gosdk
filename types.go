@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"time"
 )
 
 type B24int int
@@ -32,6 +33,50 @@ func (i *B24int) UnmarshalJSON(data []byte) error {
 	default:
 		return fmt.Errorf("%s: unsupported JSON type: %T", op, decodedValue)
 	}
+
+	return nil
+}
+
+type B24date time.Time
+
+func (d *B24date) UnmarshalJSON(data []byte) error {
+	const op = "B24date.UnmarshalJSON"
+	const dateLayout = "2006-01-02"
+
+	var raw string
+	err := json.Unmarshal(data, &raw)
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	t, err := time.Parse(dateLayout, raw)
+	if err != nil {
+		return fmt.Errorf("%s: time parse error :%w", op, err)
+	}
+
+	*d = B24date(t)
+
+	return nil
+}
+
+type B24datetime time.Time
+
+func (d *B24datetime) UnmarshalJSON(data []byte) error {
+	const op = "B24datetime.UnmarshalJSON"
+	const datetimeLayout = "2006-01-02T15:04:05"
+
+	var raw string
+	err := json.Unmarshal(data, &raw)
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	t, err := time.Parse(datetimeLayout, raw)
+	if err != nil {
+		return fmt.Errorf("%s: time parse error :%w", op, err)
+	}
+
+	*d = B24datetime(t)
 
 	return nil
 }

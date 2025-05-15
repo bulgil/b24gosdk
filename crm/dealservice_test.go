@@ -60,8 +60,8 @@ func TestDealService_Add_ErrorOnNilFields(t *testing.T) {
 
 func TestDealService_Get_Success(t *testing.T) {
 	expectedDeal := Deal{
-		ID:    42,
-		Title: "Test Deal",
+		ID:    ptr(b24gosdk.B24int(42)),
+		Title: ptr("Test Deal"),
 	}
 
 	mockClient := &MockClient[Deal]{
@@ -75,7 +75,7 @@ func TestDealService_Get_Success(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if deal.ID != 42 || deal.Title != "Test Deal" {
+	if deal.ID != ptr(b24gosdk.B24int(42)) || deal.Title != ptr("Test Deal") {
 		t.Errorf("unexpected deal returned: %+v", deal)
 	}
 
@@ -146,8 +146,8 @@ func TestDealService_Delete_Success(t *testing.T) {
 
 func TestDealService_List_Success(t *testing.T) {
 	expectedDeals := []*Deal{
-		{ID: 1, Title: "Deal 1"},
-		{ID: 2, Title: "Deal 2"},
+		{ID: ptr(b24gosdk.B24int(1)), Title: ptr("Deal 1")},
+		{ID: ptr(b24gosdk.B24int(2)), Title: ptr("Deal 2")},
 	}
 
 	mockClient := &MockClient[[]*Deal]{

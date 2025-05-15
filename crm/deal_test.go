@@ -25,9 +25,9 @@ func Test_DealUnmarshalJSON(t *testing.T) {
 				"UF_CRM_22": "somesome"
 			}`,
 			expected: Deal{
-				ID:          12345,
-				Title:       "Some title",
-				AsignedByID: 156,
+				ID:          ptr(b24gosdk.B24int(12345)),
+				Title:       ptr("Some title"),
+				AsignedByID: ptr(b24gosdk.B24int(156)),
 				Userfields: b24gosdk.Userfields{
 					"UF_CRM_1":  float64(123),
 					"UF_CRM_22": "somesome",
@@ -42,9 +42,9 @@ func Test_DealUnmarshalJSON(t *testing.T) {
 				"ASSIGNED_BY_ID": 456
 			}`,
 			expected: Deal{
-				ID:          123,
-				Title:       "No userfields",
-				AsignedByID: 456,
+				ID:          ptr(b24gosdk.B24int(123)),
+				Title:       ptr("No userfields"),
+				AsignedByID: ptr(b24gosdk.B24int(456)),
 				Userfields:  b24gosdk.Userfields{},
 			},
 		},
@@ -57,9 +57,9 @@ func Test_DealUnmarshalJSON(t *testing.T) {
 				"UF_CRM_NULL": null
 			}`,
 			expected: Deal{
-				ID:          555,
-				Title:       "Null field test",
-				AsignedByID: 888,
+				ID:          ptr(b24gosdk.B24int(555)),
+				Title:       ptr("Null field test"),
+				AsignedByID: ptr(b24gosdk.B24int(888)),
 				Userfields: b24gosdk.Userfields{
 					"UF_CRM_NULL": nil,
 				},
@@ -74,9 +74,9 @@ func Test_DealUnmarshalJSON(t *testing.T) {
 				"UF_CRM_LIST": [1, 2, 3]
 			}`,
 			expected: Deal{
-				ID:          777,
-				Title:       "Array field test",
-				AsignedByID: 999,
+				ID:          ptr(b24gosdk.B24int(777)),
+				Title:       ptr("Array field test"),
+				AsignedByID: ptr(b24gosdk.B24int(999)),
 				Userfields: b24gosdk.Userfields{
 					"UF_CRM_LIST": []interface{}{float64(1), float64(2), float64(3)},
 				},
@@ -96,9 +96,9 @@ func Test_DealUnmarshalJSON(t *testing.T) {
 				"UF_CRM_OBJ": { "foo": "bar" }
 			}`,
 			expected: Deal{
-				ID:          987,
-				Title:       "Object field",
-				AsignedByID: 654,
+				ID:          ptr(b24gosdk.B24int(987)),
+				Title:       ptr("Object field"),
+				AsignedByID: ptr(b24gosdk.B24int(654)),
 				Userfields: b24gosdk.Userfields{
 					"UF_CRM_OBJ": map[string]interface{}{
 						"foo": "bar",
