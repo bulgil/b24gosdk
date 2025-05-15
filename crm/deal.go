@@ -25,8 +25,8 @@ type Deal struct {
 	ContactID           *b24gosdk.B24int      `json:"CONTACT_ID,omitempty"`
 	ContactIDs          *[]b24gosdk.B24int    `json:"CONTACT_IDS,omitempty"`
 	QuoteID             *b24gosdk.B24int      `json:"QUOTE_ID,omitempty"`
-	BeginDate           *b24gosdk.B24date     `json:"BEGIN_DATE,omitempty"`
-	CloseDate           *b24gosdk.B24date     `json:"CLOSEDATE,omitempty"`
+	BeginDate           *b24gosdk.B24datetime `json:"BEGIN_DATE,omitempty"`
+	CloseDate           *b24gosdk.B24datetime `json:"CLOSEDATE,omitempty"`
 	Opened              *byte                 `json:"OPENED,omitempty"`
 	Closed              *byte                 `json:"CLOSED,omitempty"`
 	Comments            *string               `json:"COMMENTS,omitempty"`
