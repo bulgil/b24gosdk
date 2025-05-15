@@ -45,7 +45,7 @@ type Deal struct {
 	OriginatorID        *string               `json:"ORIGINATOR_ID,omitempty"`
 	OriginID            *string               `json:"ORIGIN_ID,omitempty"`
 	UTMSource           *string               `json:"UTM_SOURCE,omitempty"`
-	UTMMediom           *string               `json:"UTM_MEDIUM,omitempty"`
+	UTMMedium           *string               `json:"UTM_MEDIUM,omitempty"`
 	UTMCampaign         *string               `json:"UTM_CAMPAIGN,omitempty"`
 	UTMContent          *string               `json:"UTM_CONTENT,omitempty"`
 	UTMTerm             *string               `json:"UTM_TERM,omitempty"`
