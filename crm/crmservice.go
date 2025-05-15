@@ -27,7 +27,7 @@ type CRMService[T any] struct {
 	methods methods
 }
 
-func NewCrmService[T any](webhook string, methods methods) CRMService[T] {
+func NewCrmService[T any](client client, webhook string, methods methods) CRMService[T] {
 	const op = "NewCrmService"
 
 	u, err := url.Parse(webhook)
@@ -36,7 +36,7 @@ func NewCrmService[T any](webhook string, methods methods) CRMService[T] {
 	}
 
 	return CRMService[T]{
-		client:  b24gosdk.NewClient(nil, webhook),
+		client:  client,
 		webhook: u.Path,
 		methods: methods,
 	}

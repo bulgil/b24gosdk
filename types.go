@@ -110,3 +110,10 @@ func (d *B24datetime) UnmarshalJSON(data []byte) error {
 
 	return nil
 }
+
+type B24multifield struct {
+	ID        *B24int `json:"ID,omitempty"`
+	TypeID    *string `json:"TYPE_ID,omitempty"`
+	Value     *string `json:"VALUE,omitempty"`
+	ValueType *string `json:"VALUE_TYPE,omitempty"`
+}

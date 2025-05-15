@@ -4,9 +4,9 @@ type DealService struct {
 	CRMService[Deal]
 }
 
-func NewDealService(webhook string) *DealService {
+func NewDealService(client client, webhook string) *DealService {
 	return &DealService{
-		CRMService: NewCrmService[Deal](webhook, methods{
+		CRMService: NewCrmService[Deal](client, webhook, methods{
 			add:    "crm.deal.add",
 			get:    "crm.deal.get",
 			update: "crm.deal.update",
