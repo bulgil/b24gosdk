@@ -101,6 +101,10 @@ func (d *B24datetime) UnmarshalJSON(data []byte) error {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
+	if raw == "" {
+		return nil
+	}
+
 	t, err := time.Parse(datetimeLayout, raw)
 	if err != nil {
 		return fmt.Errorf("%s: time parse error :%w", op, err)
