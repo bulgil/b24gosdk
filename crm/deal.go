@@ -18,7 +18,7 @@ type Deal struct {
 	IsRepeatedApproach  *byte                 `json:"IS_REPEATED_APPROACH,omitempty"`
 	Probability         *b24gosdk.B24int      `json:"PROBABILITY,omitempty"`
 	CurrencyID          *string               `json:"CURRENCY_ID,omitempty"`
-	Opportunity         *b24gosdk.B24int      `json:"OPPORTUNITY,omitempty"`
+	Opportunity         *b24gosdk.B24float    `json:"OPPORTUNITY,omitempty"`
 	IsManualOpportunity *byte                 `json:"IS_MANUAL_OPPORTUNITY,omitempty"`
 	TaxValue            *b24gosdk.B24int      `json:"TAX_VALUE,omitempty"`
 	CompanyID           *b24gosdk.B24int      `json:"COMPANY_ID,omitempty"`

@@ -75,7 +75,7 @@ func TestDealService_Get_Success(t *testing.T) {
 		t.Fatalf("unexpected error: %v", err)
 	}
 
-	if deal.ID != ptr(b24gosdk.B24int(42)) || deal.Title != ptr("Test Deal") {
+	if *deal.ID != 42 || *deal.Title != "Test Deal" {
 		t.Errorf("unexpected deal returned: %+v", deal)
 	}
 

@@ -37,6 +37,36 @@ func (i *B24int) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+type B24float float64
+
+func (i *B24float) UnmarshalJSON(data []byte) error {
+	const op = "B24float.UnmarshalJSON"
+
+	var decodedValue any
+
+	err := json.Unmarshal(data, &decodedValue)
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	switch v := decodedValue.(type) {
+	case string:
+		intValue, err := strconv.ParseFloat(v, 64)
+		if err != nil {
+			return fmt.Errorf("%s: cannot convert string to float64: %w", op, err)
+		}
+
+		*i = B24float(intValue)
+	case float64:
+		*i = B24float(v)
+
+	default:
+		return fmt.Errorf("%s: unsupported JSON type: %T", op, decodedValue)
+	}
+
+	return nil
+}
+
 type B24date time.Time
 
 func (d *B24date) UnmarshalJSON(data []byte) error {
