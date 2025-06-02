@@ -1,4 +1,4 @@
-package b24gosdk
+package transport
 
 import "fmt"
 

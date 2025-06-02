@@ -1,4 +1,4 @@
-package b24gosdk
+package transport
 
 import (
 	"bytes"
@@ -10,32 +10,20 @@ import (
 	"strings"
 )
 
-var client *Client
-
 type HTTPClient interface {
 	Do(r *http.Request) (*http.Response, error)
 }
 
-type Client struct {
+type Transport struct {
 	httpClient HTTPClient
 	baseURL    *url.URL
 }
 
-func NewClient(httpClient HTTPClient, baseURL string) *Client {
+func NewTransport(httpClient HTTPClient, baseURL string) *Transport {
 	const op = "NewClient"
-
-	if client != nil {
-		return client
-	}
 
 	if strings.TrimSpace(baseURL) == "" {
 		panic("client domain must not be empty")
-	}
-
-	if httpClient == nil {
-		httpClient = &http.Client{
-			// Timeout: time.Second * 5,
-		}
 	}
 
 	u, err := url.Parse(baseURL)
@@ -43,13 +31,13 @@ func NewClient(httpClient HTTPClient, baseURL string) *Client {
 		panic(fmt.Sprintf("%s: %v", op, err))
 	}
 
-	return &Client{
+	return &Transport{
 		httpClient: httpClient,
 		baseURL:    u,
 	}
 }
 
-func (c *Client) Call(method, webhook string, query url.Values, body, result any) error {
+func (c *Transport) Call(method, webhook string, query url.Values, body, result any) error {
 	const op = "Client.Call"
 
 	url := url.URL{
