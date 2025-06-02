@@ -4,9 +4,9 @@ type LeadService struct {
 	CRMService[Lead]
 }
 
-func NewLeadService(client client, webhook string) *LeadService {
+func NewLeadService(transport Transport, webhook string) *LeadService {
 	return &LeadService{
-		CRMService: NewCrmService[Lead](client, webhook, methods{
+		CRMService: NewCrmService[Lead](transport, webhook, methods{
 			add:    "crm.lead.add",
 			get:    "crm.lead.get",
 			update: "crm.lead.update",
