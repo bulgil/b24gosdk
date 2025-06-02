@@ -12,7 +12,7 @@ import (
 	"github.com/bulgil/b24gosdk"
 )
 
-type MockClient[T any] struct {
+type Mocktransport[T any] struct {
 	CalledMethod string
 	CalledURL    string
 	CalledQuery  url.Values
@@ -22,7 +22,7 @@ type MockClient[T any] struct {
 	ErrorToReturn     error
 }
 
-func (m *MockClient[T]) Call(method, url string, query url.Values, body, resp any) error {
+func (m *Mocktransport[T]) Call(method, url string, query url.Values, body, resp any) error {
 	m.CalledMethod = method
 	m.CalledURL = url
 	m.CalledQuery = query
@@ -37,13 +37,13 @@ func (m *MockClient[T]) Call(method, url string, query url.Values, body, resp an
 	return m.ErrorToReturn
 }
 
-type MockListClient[T any] struct {
+type MockListtransport[T any] struct {
 	Called   bool
 	Response []*T
 	Err      error
 }
 
-func (m *MockListClient[T]) Call(method, url string, query url.Values, body, resp any) error {
+func (m *MockListtransport[T]) Call(method, url string, query url.Values, body, resp any) error {
 	m.Called = true
 	if r, ok := resp.(*[]*T); ok {
 		*r = m.Response
@@ -58,13 +58,13 @@ func Test_CRMServiceGet_Success(t *testing.T) {
 	}
 
 	expected := &entity{ID: 42, Name: "Test"}
-	mockClient := &MockClient[entity]{
+	mocktransport := &Mocktransport[entity]{
 		RespponseToReturn: expected,
 	}
 
 	service := CRMService[entity]{
-		client:  mockClient,
-		webhook: "/webhook",
+		transport: mocktransport,
+		webhook:   "/webhook",
 		methods: methods{
 			get: "crm.get",
 		},
@@ -79,27 +79,27 @@ func Test_CRMServiceGet_Success(t *testing.T) {
 		t.Fatalf("expected result %+v, got %+v", expected, result)
 	}
 
-	if mockClient.CalledMethod != http.MethodGet {
-		t.Errorf("expected GET method, got %v", mockClient.CalledMethod)
+	if mocktransport.CalledMethod != http.MethodGet {
+		t.Errorf("expected GET method, got %v", mocktransport.CalledMethod)
 	}
 
-	if mockClient.CalledURL != "/webhook/crm.get" {
-		t.Errorf("expected webhook %v, got %v", "/webhook/crm.get", mockClient.CalledURL)
+	if mocktransport.CalledURL != "/webhook/crm.get" {
+		t.Errorf("expected webhook %v, got %v", "/webhook/crm.get", mocktransport.CalledURL)
 	}
 
-	if mockClient.CalledQuery.Get("id") != "42" {
-		t.Errorf("expected query id=42, got %+v", mockClient.CalledQuery.Get("id"))
+	if mocktransport.CalledQuery.Get("id") != "42" {
+		t.Errorf("expected query id=42, got %+v", mocktransport.CalledQuery.Get("id"))
 	}
 }
 
 func Test_CRMServiceGet_Error(t *testing.T) {
-	mockClient := &MockClient[struct{}]{
+	mocktransport := &Mocktransport[struct{}]{
 		ErrorToReturn: fmt.Errorf("network error"),
 	}
 
 	service := CRMService[struct{}]{
-		client:  mockClient,
-		webhook: "/webhook",
+		transport: mocktransport,
+		webhook:   "/webhook",
 		methods: methods{
 			get: "crm.get",
 		},
@@ -120,13 +120,13 @@ func Test_CRMServiceGet_Error(t *testing.T) {
 }
 
 func Test_CRMServiceUpdate_Success(t *testing.T) {
-	mockClient := &MockClient[bool]{
+	mocktransport := &Mocktransport[bool]{
 		RespponseToReturn: ptr[bool](true),
 	}
 
 	service := CRMService[struct{}]{
-		client:  mockClient,
-		webhook: "/webhook",
+		transport: mocktransport,
+		webhook:   "/webhook",
 		methods: methods{
 			update: "crm.update",
 		},
@@ -144,16 +144,16 @@ func Test_CRMServiceUpdate_Success(t *testing.T) {
 		t.Errorf("expected result true, got %v", result)
 	}
 
-	if mockClient.CalledMethod != http.MethodPost {
-		t.Errorf("expected method POST, got %v", mockClient.CalledMethod)
+	if mocktransport.CalledMethod != http.MethodPost {
+		t.Errorf("expected method POST, got %v", mocktransport.CalledMethod)
 	}
 
-	if mockClient.CalledQuery != nil {
-		t.Errorf("expected query nil, got %+v", mockClient.CalledQuery)
+	if mocktransport.CalledQuery != nil {
+		t.Errorf("expected query nil, got %+v", mocktransport.CalledQuery)
 	}
 
-	if mockClient.CalledURL != "/webhook/crm.update" {
-		t.Errorf("expected URL /webhook/crm.update, got %v", mockClient.CalledURL)
+	if mocktransport.CalledURL != "/webhook/crm.update" {
+		t.Errorf("expected URL /webhook/crm.update, got %v", mocktransport.CalledURL)
 	}
 
 	expectedBody := struct {
@@ -165,19 +165,19 @@ func Test_CRMServiceUpdate_Success(t *testing.T) {
 		Fields: map[string]any{"TITLE": "name", "ASSIGNED_BY_ID": 42},
 		Params: nil,
 	}
-	if !reflect.DeepEqual(mockClient.CalledBody, expectedBody) {
-		t.Errorf("expected body %+v, got %+v", expectedBody, mockClient.CalledBody)
+	if !reflect.DeepEqual(mocktransport.CalledBody, expectedBody) {
+		t.Errorf("expected body %+v, got %+v", expectedBody, mocktransport.CalledBody)
 	}
 }
 
 func Test_CRMServiceUpdate_Error(t *testing.T) {
-	mockClient := &MockClient[bool]{
+	mocktransport := &Mocktransport[bool]{
 		ErrorToReturn: fmt.Errorf("update failed"),
 	}
 
 	service := CRMService[struct{}]{
-		client:  mockClient,
-		webhook: "/webhook",
+		transport: mocktransport,
+		webhook:   "/webhook",
 		methods: methods{
 			update: "crm.update",
 		},
@@ -200,12 +200,12 @@ func Test_CRMServiceUpdate_Error(t *testing.T) {
 		t.Errorf("expected result to be false, got true")
 	}
 
-	if mockClient.CalledMethod != http.MethodPost {
-		t.Errorf("expected method POST, got %v", mockClient.CalledMethod)
+	if mocktransport.CalledMethod != http.MethodPost {
+		t.Errorf("expected method POST, got %v", mocktransport.CalledMethod)
 	}
 
-	if mockClient.CalledURL != "/webhook/crm.update" {
-		t.Errorf("expected URL /webhook/crm.update, got %v", mockClient.CalledURL)
+	if mocktransport.CalledURL != "/webhook/crm.update" {
+		t.Errorf("expected URL /webhook/crm.update, got %v", mocktransport.CalledURL)
 	}
 
 	expectedBody := struct {
@@ -218,19 +218,19 @@ func Test_CRMServiceUpdate_Error(t *testing.T) {
 		Params: nil,
 	}
 
-	if !reflect.DeepEqual(mockClient.CalledBody, expectedBody) {
-		t.Errorf("expected body %+v, got %+v", expectedBody, mockClient.CalledBody)
+	if !reflect.DeepEqual(mocktransport.CalledBody, expectedBody) {
+		t.Errorf("expected body %+v, got %+v", expectedBody, mocktransport.CalledBody)
 	}
 }
 
 func Test_CRMServiceDelete_Success(t *testing.T) {
-	mockClient := &MockClient[bool]{
+	mocktransport := &Mocktransport[bool]{
 		RespponseToReturn: ptr(true),
 	}
 
 	service := CRMService[struct{}]{
-		client:  mockClient,
-		webhook: "/webhook",
+		transport: mocktransport,
+		webhook:   "/webhook",
 		methods: methods{
 			delete: "crm.delete",
 		},
@@ -245,27 +245,27 @@ func Test_CRMServiceDelete_Success(t *testing.T) {
 		t.Errorf("expected result true, got %v", result)
 	}
 
-	if mockClient.CalledMethod != http.MethodGet {
-		t.Errorf("expected method GET, got %v", mockClient.CalledMethod)
+	if mocktransport.CalledMethod != http.MethodGet {
+		t.Errorf("expected method GET, got %v", mocktransport.CalledMethod)
 	}
 
-	if mockClient.CalledURL != "/webhook/crm.delete" {
-		t.Errorf("expected URL /webhook/crm.delete, got %v", mockClient.CalledURL)
+	if mocktransport.CalledURL != "/webhook/crm.delete" {
+		t.Errorf("expected URL /webhook/crm.delete, got %v", mocktransport.CalledURL)
 	}
 
-	if mockClient.CalledQuery.Get("id") != "42" {
-		t.Errorf("expected query id=42, got %v", mockClient.CalledQuery.Get("id"))
+	if mocktransport.CalledQuery.Get("id") != "42" {
+		t.Errorf("expected query id=42, got %v", mocktransport.CalledQuery.Get("id"))
 	}
 }
 
 func Test_CRMServiceDelete_Error(t *testing.T) {
-	mockClient := &MockClient[bool]{
+	mocktransport := &Mocktransport[bool]{
 		ErrorToReturn: fmt.Errorf("delete failed"),
 	}
 
 	service := CRMService[struct{}]{
-		client:  mockClient,
-		webhook: "/webhook",
+		transport: mocktransport,
+		webhook:   "/webhook",
 		methods: methods{
 			delete: "crm.delete",
 		},
@@ -284,27 +284,27 @@ func Test_CRMServiceDelete_Error(t *testing.T) {
 		t.Errorf("expected result to be false, got true")
 	}
 
-	if mockClient.CalledMethod != http.MethodGet {
-		t.Errorf("expected method GET, got %v", mockClient.CalledMethod)
+	if mocktransport.CalledMethod != http.MethodGet {
+		t.Errorf("expected method GET, got %v", mocktransport.CalledMethod)
 	}
 
-	if mockClient.CalledURL != "/webhook/crm.delete" {
-		t.Errorf("expected URL /webhook/crm.delete, got %v", mockClient.CalledURL)
+	if mocktransport.CalledURL != "/webhook/crm.delete" {
+		t.Errorf("expected URL /webhook/crm.delete, got %v", mocktransport.CalledURL)
 	}
 
-	if mockClient.CalledQuery.Get("id") != "42" {
-		t.Errorf("expected query id=42, got %v", mockClient.CalledQuery.Get("id"))
+	if mocktransport.CalledQuery.Get("id") != "42" {
+		t.Errorf("expected query id=42, got %v", mocktransport.CalledQuery.Get("id"))
 	}
 }
 
 func Test_CRMServiceAdd_Success(t *testing.T) {
-	mockClient := &MockClient[b24gosdk.B24int]{
+	mocktransport := &Mocktransport[b24gosdk.B24int]{
 		RespponseToReturn: ptr(b24gosdk.B24int(123)),
 	}
 
 	service := CRMService[struct{}]{
-		client:  mockClient,
-		webhook: "/webhook",
+		transport: mocktransport,
+		webhook:   "/webhook",
 		methods: methods{
 			add: "crm.add",
 		},
@@ -325,22 +325,22 @@ func Test_CRMServiceAdd_Success(t *testing.T) {
 		t.Errorf("expected ID 123, got %d", result)
 	}
 
-	if mockClient.CalledMethod != http.MethodPost {
-		t.Errorf("expected POST, got %s", mockClient.CalledMethod)
+	if mocktransport.CalledMethod != http.MethodPost {
+		t.Errorf("expected POST, got %s", mocktransport.CalledMethod)
 	}
-	if mockClient.CalledURL != "/webhook/crm.add" {
-		t.Errorf("expected URL /webhook/crm.add, got %v", mockClient.CalledURL)
+	if mocktransport.CalledURL != "/webhook/crm.add" {
+		t.Errorf("expected URL /webhook/crm.add, got %v", mocktransport.CalledURL)
 	}
 }
 
-func Test_CRMServiceAdd_ErrorFromClient(t *testing.T) {
-	mockClient := &MockClient[b24gosdk.B24int]{
+func Test_CRMServiceAdd_ErrorFromtransport(t *testing.T) {
+	mocktransport := &Mocktransport[b24gosdk.B24int]{
 		ErrorToReturn: fmt.Errorf("call failed"),
 	}
 
 	service := CRMService[struct{}]{
-		client:  mockClient,
-		webhook: "/webhook",
+		transport: mocktransport,
+		webhook:   "/webhook",
 		methods: methods{
 			add: "crm.add",
 		},
@@ -361,11 +361,11 @@ func Test_CRMServiceAdd_ErrorFromClient(t *testing.T) {
 }
 
 func Test_CRMServiceAdd_NilFields(t *testing.T) {
-	mockClient := &MockClient[b24gosdk.B24int]{}
+	mocktransport := &Mocktransport[b24gosdk.B24int]{}
 
 	service := CRMService[struct{}]{
-		client:  mockClient,
-		webhook: "/webhook",
+		transport: mocktransport,
+		webhook:   "/webhook",
 		methods: methods{
 			add: "crm.add",
 		},
@@ -394,15 +394,15 @@ func Test_CRMServiceList_Success(t *testing.T) {
 		{ID: 2, Name: "More"},
 	}
 
-	mockClient := &MockListClient[entity]{
+	mocktransport := &MockListtransport[entity]{
 		Response: expected,
 		Err:      nil,
 	}
 
 	service := CRMService[entity]{
-		client:  mockClient,
-		webhook: "/webhook",
-		methods: methods{list: "crm.list"},
+		transport: mocktransport,
+		webhook:   "/webhook",
+		methods:   methods{list: "crm.list"},
 	}
 
 	res, err := service.List([]string{"ID", "NAME"}, nil, nil, 0)
@@ -415,20 +415,20 @@ func Test_CRMServiceList_Success(t *testing.T) {
 	}
 }
 
-func Test_CRMServiceList_ErrorFromClient(t *testing.T) {
+func Test_CRMServiceList_ErrorFromtransport(t *testing.T) {
 	type entity struct {
 		ID   int
 		Name string
 	}
 
-	mockClient := &MockClient[[]*entity]{
+	mocktransport := &Mocktransport[[]*entity]{
 		ErrorToReturn: fmt.Errorf("network error"),
 	}
 
 	service := CRMService[entity]{
-		client:  mockClient,
-		webhook: "/webhook",
-		methods: methods{list: "crm.list"},
+		transport: mocktransport,
+		webhook:   "/webhook",
+		methods:   methods{list: "crm.list"},
 	}
 
 	res, err := service.List([]string{"ID", "NAME"}, nil, nil, 0)
@@ -451,14 +451,14 @@ func Test_CRMServiceList_EmptyResponse(t *testing.T) {
 		Name string
 	}
 
-	mockClient := &MockClient[[]*entity]{
+	mocktransport := &Mocktransport[[]*entity]{
 		RespponseToReturn: &[]*entity{},
 	}
 
 	service := CRMService[entity]{
-		client:  mockClient,
-		webhook: "/webhook",
-		methods: methods{list: "crm.list"},
+		transport: mocktransport,
+		webhook:   "/webhook",
+		methods:   methods{list: "crm.list"},
 	}
 
 	res, err := service.List([]string{"ID"}, nil, nil, 0)

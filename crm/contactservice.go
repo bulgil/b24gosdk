@@ -4,9 +4,9 @@ type ContactService struct {
 	CRMService[Contact]
 }
 
-func NewContactService(client client, webhook string) *ContactService {
+func NewContactService(transport Transport, webhook string) *ContactService {
 	return &ContactService{
-		CRMService: NewCrmService[Contact](client, webhook, methods{
+		CRMService: NewCrmService[Contact](transport, webhook, methods{
 			add:    "crm.contact.add",
 			get:    "crm.contact.get",
 			update: "crm.contact.update",

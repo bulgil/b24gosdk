@@ -10,8 +10,8 @@ import (
 func newMockDealService(client client) *DealService {
 	return &DealService{
 		CRMService: CRMService[Deal]{
-			client:  client,
-			webhook: "/webhook",
+			transport: client,
+			webhook:   "/webhook",
 			methods: methods{
 				add:    "crm.deal.add",
 				get:    "crm.deal.get",
@@ -24,7 +24,7 @@ func newMockDealService(client client) *DealService {
 }
 
 func TestDealService_Add_Success(t *testing.T) {
-	mockClient := &MockClient[b24gosdk.B24int]{
+	mockClient := &Mocktransport[b24gosdk.B24int]{
 		RespponseToReturn: ptr(b24gosdk.B24int(123)),
 	}
 
@@ -64,7 +64,7 @@ func TestDealService_Get_Success(t *testing.T) {
 		Title: ptr("Test Deal"),
 	}
 
-	mockClient := &MockClient[Deal]{
+	mockClient := &Mocktransport[Deal]{
 		RespponseToReturn: ptr(expectedDeal),
 	}
 
@@ -89,7 +89,7 @@ func TestDealService_Get_Success(t *testing.T) {
 }
 
 func TestDealService_Update_Success(t *testing.T) {
-	mockClient := &MockClient[bool]{
+	mockClient := &Mocktransport[bool]{
 		RespponseToReturn: ptr(true),
 	}
 
@@ -120,7 +120,7 @@ func TestDealService_Update_ErrorOnNilFields(t *testing.T) {
 }
 
 func TestDealService_Delete_Success(t *testing.T) {
-	mockClient := &MockClient[bool]{
+	mockClient := &Mocktransport[bool]{
 		RespponseToReturn: ptr(true),
 	}
 
@@ -150,7 +150,7 @@ func TestDealService_List_Success(t *testing.T) {
 		{ID: ptr(b24gosdk.B24int(2)), Title: ptr("Deal 2")},
 	}
 
-	mockClient := &MockClient[[]*Deal]{
+	mockClient := &Mocktransport[[]*Deal]{
 		RespponseToReturn: ptr(expectedDeals),
 	}
 

@@ -22,12 +22,12 @@ type client interface {
 }
 
 type CRMService[T any] struct {
-	client  client
-	webhook string
-	methods methods
+	transport Transport
+	webhook   string
+	methods   methods
 }
 
-func NewCrmService[T any](client client, webhook string, methods methods) CRMService[T] {
+func NewCrmService[T any](transport Transport, webhook string, methods methods) CRMService[T] {
 	const op = "NewCrmService"
 
 	u, err := url.Parse(webhook)
@@ -36,9 +36,9 @@ func NewCrmService[T any](client client, webhook string, methods methods) CRMSer
 	}
 
 	return CRMService[T]{
-		client:  client,
-		webhook: u.Path,
-		methods: methods,
+		transport: transport,
+		webhook:   u.Path,
+		methods:   methods,
 	}
 }
 
@@ -59,7 +59,7 @@ func (s *CRMService[T]) Add(fields, params any) (int, error) {
 	}
 
 	var id b24gosdk.B24int
-	err := s.client.Call(http.MethodPost, wh, nil, body, &id)
+	err := s.transport.Call(http.MethodPost, wh, nil, body, &id)
 	if err != nil {
 		return 0, fmt.Errorf("%s: %w", op, err)
 	}
@@ -76,7 +76,7 @@ func (s *CRMService[T]) Get(id int) (*T, error) {
 	}
 
 	var entity T
-	err := s.client.Call(http.MethodGet, wh, query, nil, &entity)
+	err := s.transport.Call(http.MethodGet, wh, query, nil, &entity)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
@@ -103,7 +103,7 @@ func (s *CRMService[T]) Update(id int, fields, params any) (bool, error) {
 	}
 
 	var result bool
-	err := s.client.Call(http.MethodPost, wh, nil, body, &result)
+	err := s.transport.Call(http.MethodPost, wh, nil, body, &result)
 	if err != nil {
 		return false, fmt.Errorf("%s: %w", op, err)
 	}
@@ -120,7 +120,7 @@ func (s *CRMService[T]) Delete(id int) (bool, error) {
 	}
 
 	var result bool
-	err := s.client.Call(http.MethodGet, wh, query, nil, &result)
+	err := s.transport.Call(http.MethodGet, wh, query, nil, &result)
 	if err != nil {
 		return false, fmt.Errorf("%s: %w", op, err)
 	}
@@ -146,7 +146,7 @@ func (s *CRMService[T]) List(sel []string, filter, order any, start int) ([]*T, 
 	}
 
 	var entities []*T
-	err := s.client.Call(http.MethodPost, wh, nil, body, &entities)
+	err := s.transport.Call(http.MethodPost, wh, nil, body, &entities)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
