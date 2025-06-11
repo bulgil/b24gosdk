@@ -32,8 +32,6 @@ func NewTransport(httpClient HTTPClient, baseURL string) *Transport {
 		panic(fmt.Sprintf("%s: %v", op, err))
 	}
 
-	u.Scheme = "http"
-
 	return &Transport{
 		httpClient: httpClient,
 		baseURL:    u,
@@ -70,7 +68,7 @@ func (c *Transport) Call(method, webhook string, query url.Values, body, result 
 	}
 
 	dump, _ := httputil.DumpRequest(req, true)
-	fmt.Println(string(dump))
+	fmt.Println(dump)
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
