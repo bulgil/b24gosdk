@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/http/httputil"
 	"net/url"
 	"strings"
 )
@@ -67,8 +66,8 @@ func (c *Transport) Call(method, webhook string, query url.Values, body, result 
 		req.Header.Set("Content-Type", "application/json")
 	}
 
-	dump, _ := httputil.DumpRequest(req, true)
-	fmt.Println(dump)
+	// dump, _ := httputil.DumpRequest(req, true)
+	// fmt.Println(dump)
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
