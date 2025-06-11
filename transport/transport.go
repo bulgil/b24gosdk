@@ -32,6 +32,8 @@ func NewTransport(httpClient HTTPClient, baseURL string) *Transport {
 		panic(fmt.Sprintf("%s: %v", op, err))
 	}
 
+	u.Scheme = "http"
+
 	return &Transport{
 		httpClient: httpClient,
 		baseURL:    u,
