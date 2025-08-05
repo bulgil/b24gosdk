@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"path"
+
+	"github.com/bulgil/b24gosdk/transport"
 )
 
 type methods struct {
@@ -20,11 +22,11 @@ var (
 )
 
 type TaskService struct {
-	transport Transport
+	transport *transport.Transport
 	webhook   string
 }
 
-func NewTaskService(transport Transport, webhook string) *TaskService {
+func NewTaskService(transport *transport.Transport, webhook string) *TaskService {
 	return &TaskService{
 		transport: transport,
 		webhook:   webhook,

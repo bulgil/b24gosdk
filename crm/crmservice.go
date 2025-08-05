@@ -9,6 +9,7 @@ import (
 	"strconv"
 
 	"github.com/bulgil/b24gosdk"
+	"github.com/bulgil/b24gosdk/transport"
 )
 
 var ErrGivenNoFields = errors.New("no given fields to update")
@@ -22,12 +23,12 @@ type client interface {
 }
 
 type CRMService[T any] struct {
-	transport Transport
+	transport *transport.Transport
 	webhook   string
 	methods   methods
 }
 
-func NewCrmService[T any](transport Transport, webhook string, methods methods) CRMService[T] {
+func NewCrmService[T any](transport *transport.Transport, webhook string, methods methods) CRMService[T] {
 	const op = "NewCrmService"
 
 	if transport == nil {

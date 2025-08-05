@@ -1,10 +1,12 @@
 package crm
 
+import "github.com/bulgil/b24gosdk/transport"
+
 type DealService struct {
 	CRMService[Deal]
 }
 
-func NewDealService(transport Transport, webhook string) *DealService {
+func NewDealService(transport *transport.Transport, webhook string) *DealService {
 	return &DealService{
 		CRMService: NewCrmService[Deal](transport, webhook, methods{
 			add:    "crm.deal.add",

@@ -1,10 +1,12 @@
 package crm
 
+import "github.com/bulgil/b24gosdk/transport"
+
 type ContactService struct {
 	CRMService[Contact]
 }
 
-func NewContactService(transport Transport, webhook string) *ContactService {
+func NewContactService(transport *transport.Transport, webhook string) *ContactService {
 	return &ContactService{
 		CRMService: NewCrmService[Contact](transport, webhook, methods{
 			add:    "crm.contact.add",
