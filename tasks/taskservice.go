@@ -1,12 +1,15 @@
 package tasks
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"path"
 
 	"github.com/bulgil/b24gosdk/transport"
 )
+
+var ErrNoTasks = errors.New("tasks not found")
 
 type methods struct {
 	add, get, update, delete, list string
@@ -80,6 +83,10 @@ func (s *TaskService) List(order map[string]string, filter map[string]any, sel [
 	}
 	if err := s.transport.Call(http.MethodPost, wh, nil, body, &result); err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+
+	if len(result.Tasks) == 0 {
+		return nil, ErrNoTasks
 	}
 
 	return result.Tasks, nil
