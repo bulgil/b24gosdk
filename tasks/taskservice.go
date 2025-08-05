@@ -63,7 +63,7 @@ func (s *TaskService) List(order map[string]string, filter map[string]any, sel [
 	wh := path.Join(s.webhook, string(methodList))
 	var body = struct {
 		Order  map[string]string `json:"order"`
-		Filter map[string]string `json:"filter"`
+		Filter map[string]any    `json:"filter"`
 		Sel    []string          `json:"select"`
 		Limit  int               `json:"limit"`
 		Start  int               `json:"start"`
