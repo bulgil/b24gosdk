@@ -57,7 +57,7 @@ func (s *TaskService) Get(id int, sel []string) (Task, error) {
 	return result.Task, nil
 }
 
-func (s *TaskService) List(order map[string]string, filter map[string]string, sel []string, limit, start int) ([]Task, error) {
+func (s *TaskService) List(order map[string]string, filter map[string]any, sel []string, limit, start int) ([]Task, error) {
 	const op = "TaskService.List"
 
 	wh := path.Join(s.webhook, string(methodList))
