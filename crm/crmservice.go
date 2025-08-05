@@ -30,9 +30,13 @@ type CRMService[T any] struct {
 func NewCrmService[T any](transport Transport, webhook string, methods methods) CRMService[T] {
 	const op = "NewCrmService"
 
+	if transport == nil {
+		panic("transport is nil")
+	}
+
 	u, err := url.Parse(webhook)
 	if err != nil {
-		panic(fmt.Sprintf("%s: webhook parsing error: %s", err, op))
+		panic(fmt.Sprintf("%s: webhook parsing error: %s", op, err.Error()))
 	}
 
 	return CRMService[T]{

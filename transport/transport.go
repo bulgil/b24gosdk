@@ -20,10 +20,10 @@ type Transport struct {
 }
 
 func NewTransport(httpClient HTTPClient, baseURL string) *Transport {
-	const op = "NewClient"
+	const op = "NewTransport"
 
 	if strings.TrimSpace(baseURL) == "" {
-		panic("client domain must not be empty")
+		panic("transport base url must not be empty")
 	}
 
 	u, err := url.Parse(baseURL)
@@ -38,7 +38,7 @@ func NewTransport(httpClient HTTPClient, baseURL string) *Transport {
 }
 
 func (c *Transport) Call(method, webhook string, query url.Values, body, result any) error {
-	const op = "Client.Call"
+	const op = "Transport.Call"
 
 	url := url.URL{
 		Scheme:   c.baseURL.Scheme,
