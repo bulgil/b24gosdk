@@ -18,10 +18,6 @@ type methods struct {
 	add, get, update, delete, list string
 }
 
-type client interface {
-	Call(method, webhook string, query url.Values, body, result any) error
-}
-
 type CRMService[T any] struct {
 	transport *transport.Transport
 	webhook   string
