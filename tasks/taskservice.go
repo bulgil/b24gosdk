@@ -1,11 +1,11 @@
 package tasks
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"path"
+	"strconv"
 
 	"github.com/bulgil/b24gosdk/transport"
 )
@@ -43,26 +43,27 @@ func (s *TaskService) Create(fields map[string]any) (int64, error) {
 
 	wh := path.Join(s.webhook, string(methodAdd))
 
-	aux := struct {
+	body := struct {
 		Fields map[string]any `json:"fields"`
 	}{
 		Fields: fields,
 	}
-	body, err := json.Marshal(aux)
-	if err != nil {
-		return 0, fmt.Errorf("%s: %w", op, err)
-	}
 
 	var result struct {
 		Task struct {
-			ID int64 `json:"id"`
+			ID string `json:"id"`
 		} `json:"task"`
 	}
 	if err := s.transport.Call(http.MethodPost, wh, nil, body, &result); err != nil {
 		return 0, fmt.Errorf("%s: %w", op, err)
 	}
 
-	return result.Task.ID, nil
+	taskID, err := strconv.Atoi(result.Task.ID)
+	if err != nil {
+		return 0, fmt.Errorf("%s: %w", op, err)
+	}
+
+	return int64(taskID), nil
 }
 
 func (s *TaskService) Get(id int, sel []string) (Task, error) {
