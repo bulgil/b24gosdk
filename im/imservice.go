@@ -25,13 +25,13 @@ func NewIMService(transport *transport.Transport, webhook string) *IMService {
 	}
 }
 
-func (s *IMService) MessageAdd(dialogID int64, message string) (int64, error) {
+func (s *IMService) MessageAdd(dialogID string, message string) (int64, error) {
 	const op = "IMService.MessageAdd"
 
 	wh := path.Join(s.webhook, string(MethodImMessageAdd))
 
 	var body = Message{
-		DialogID: b24gosdk.B24int(dialogID),
+		DialogID: dialogID,
 		Message:  message,
 	}
 
