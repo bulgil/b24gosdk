@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 	"path"
 	"strconv"
 
@@ -148,4 +149,27 @@ func (s *TaskService) AddComment(taskID int, message string, authorID int) (int,
 	}
 
 	return commentID, nil
+}
+
+func (s *TaskService) Update(taskID int64, fields any) (bool, error) {
+	const op = "TaskService.Update"
+
+	wh := path.Join(s.webhook, string(methodUpdate))
+
+	query := url.Values{
+		"taskId": []string{strconv.Itoa(int(taskID))},
+	}
+
+	var body = struct {
+		Fields any `json:"fields"`
+	}{
+		Fields: fields,
+	}
+
+	var updated bool
+	if err := s.transport.Call(http.MethodPost, wh, query, body, &updated); err != nil {
+		return false, fmt.Errorf("%s: %w", op, err)
+	}
+
+	return updated, nil
 }
