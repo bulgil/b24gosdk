@@ -15,7 +15,7 @@ import (
 var ErrGivenNoFields = errors.New("no given fields to update")
 
 type methods struct {
-	add, get, update, delete, list string
+	add, get, update, delete, list, fields string
 }
 
 type CRMService[T any] struct {
@@ -153,4 +153,18 @@ func (s *CRMService[T]) List(sel []string, filter, order any, start int) ([]*T, 
 	}
 
 	return entities, nil
+}
+
+func (s *CRMService[T]) Fields() (Fields, error) {
+	const op = "CRMService.Fields"
+
+	wh := path.Join(s.webhook, s.methods.fields)
+
+	var fields Fields
+	err := s.transport.Call(http.MethodGet, wh, nil, nil, &fields)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+
+	return fields, nil
 }

@@ -14,6 +14,7 @@ func NewDealService(transport *transport.Transport, webhook string) *DealService
 			update: "crm.deal.update",
 			delete: "crm.deal.delete",
 			list:   "crm.deal.list",
+			fields: "crm.deal.fields",
 		}),
 	}
 }
