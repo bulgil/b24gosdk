@@ -20,11 +20,12 @@ type methods struct {
 type method string
 
 var (
-	methodAdd        method = "tasks.task.add"
-	methodUpdate     method = "tasks.task.update"
-	methodGet        method = "tasks.task.get"
-	methodList       method = "tasks.task.list"
-	methodCommentAdd method = "task.commentitem.add"
+	methodAdd          method = "tasks.task.add"
+	methodUpdate       method = "tasks.task.update"
+	methodGet          method = "tasks.task.get"
+	methodList         method = "tasks.task.list"
+	methodCommentAdd   method = "task.commentitem.add"
+	methodTaskComplete method = "task.tasks.complete"
 )
 
 type TaskService struct {
@@ -172,4 +173,22 @@ func (s *TaskService) Update(taskID int64, fields any) (bool, error) {
 	}
 
 	return updated, nil
+}
+
+func (s *TaskService) Complete(taskID int64) error {
+	const op = "TaskService.Complete"
+
+	wh := path.Join(s.webhook, string(methodTaskComplete))
+
+	var body = struct {
+		TaskID int64 `json:"taskId"`
+	}{
+		TaskID: taskID,
+	}
+
+	if err := s.transport.Call(http.MethodPost, wh, nil, body, nil); err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	return nil
 }
