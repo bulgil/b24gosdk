@@ -152,7 +152,7 @@ func (s *TaskService) AddComment(taskID int, message string, authorID int) (int,
 	return commentID, nil
 }
 
-func (s *TaskService) Update(taskID int64, fields any) (bool, error) {
+func (s *TaskService) Update(taskID int64, fields any) error {
 	const op = "TaskService.Update"
 
 	wh := path.Join(s.webhook, string(methodUpdate))
@@ -167,12 +167,11 @@ func (s *TaskService) Update(taskID int64, fields any) (bool, error) {
 		Fields: fields,
 	}
 
-	var updated bool
-	if err := s.transport.Call(http.MethodPost, wh, query, body, &updated); err != nil {
-		return false, fmt.Errorf("%s: %w", op, err)
+	if err := s.transport.Call(http.MethodPost, wh, query, body, nil); err != nil {
+		return fmt.Errorf("%s: %w", op, err)
 	}
 
-	return updated, nil
+	return nil
 }
 
 func (s *TaskService) Complete(taskID int64) error {
