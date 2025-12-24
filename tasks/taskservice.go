@@ -25,7 +25,7 @@ var (
 	methodGet          method = "tasks.task.get"
 	methodList         method = "tasks.task.list"
 	methodCommentAdd   method = "task.commentitem.add"
-	methodTaskComplete method = "task.tasks.complete"
+	methodTaskComplete method = "tasks.task.complete"
 )
 
 type TaskService struct {
